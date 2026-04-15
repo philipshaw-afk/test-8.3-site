@@ -38,9 +38,28 @@ const predictions = [
 ];
 
 const sgProfile = {
-  offers: 8, formal: 7, successRate: '85.71%', avgMktCap: '£1,015m', hostile: 0,
-  derivatives: '100%', netBuyer: '87.5%', avgEndHolding: '2.49%',
-  avgFirstDay: 30.5, avgEndDay: 141.6, avgStartHolding: '1.12%',
+  // Overview
+  offers: 8, formal: 7, inconclusive: 1, completedFormal: 6, failedBids: 1,
+  successRate: '85.71%', avgMktCap: '£1,015m', hostile: 0,
+  increasedOffers: 1, cashOnly: 3, shareOnly: 0, mixed: 2,
+  existingShareholder: 0,
+  // Pre-formal offer period
+  avgStartHolding: '0%',
+  tradingBeforeOffer: '12.5%', tradingBetweenIndicativeAndFormal: '0%',
+  avgChangePreFormal: '3.95%', dealsPreFormal: 1,
+  sharesPreFormal: '0%', derivativesPreFormal: '100%',
+  // Formal offer period
+  tradingAfterFormal: '100%', avgChangeFormal: '1.66%',
+  dealsFormal: 7, sharesFormal: '28.6%', derivativesFormal: '100%',
+  // End of offer
+  heldAtEnd: '100%', avgEndHolding: '2.49%',
+  // Timing
+  avgFirstDay: 30.5, avgEndDay: 141.6,
+  // Buyer/seller
+  netSeller: '12.5%', netBuyer: '87.5%',
+  // Instruments overall
+  sharesOverall: '25%', derivativesOverall: '100%',
+  // Sector & geo
   sectors: 'Financials, Industrials, Tech', geos: 'UK (75%), Europe (25%)'
 };
 
