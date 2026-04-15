@@ -66,37 +66,203 @@ function renderPredictions() {
 }
 
 // === SLIDE-OUT PANEL ===
+
+function buildBehaviourPanel(p) {
+  // Helper for buyer/seller bar
+  const buyerPct = parseFloat(p.netBuyer);
+  const sellerPct = parseFloat(p.netSeller);
+
+  return `
+    <!-- Nav tabs -->
+    <div class="sp-tabs">
+      <button class="sp-tab active" onclick="switchTab(this,'tab-overview')">Overview</button>
+      <button class="sp-tab" onclick="switchTab(this,'tab-timing')">Timing</button>
+      <button class="sp-tab" onclick="switchTab(this,'tab-instruments')">Instruments</button>
+    </div>
+
+    <!-- Overview tab -->
+    <div class="sp-tab-content active" id="tab-overview">
+      <div class="sp-section">
+        <div class="sp-label">Deal Activity</div>
+        <div class="sp-grid sp-grid-3">
+          <div class="sp-metric-card">
+            <div class="sp-metric-num">${p.offers}</div>
+            <div class="sp-metric-label">Offers Tracked</div>
+          </div>
+          <div class="sp-metric-card">
+            <div class="sp-metric-num">${p.formal}</div>
+            <div class="sp-metric-label">Formal Offers</div>
+          </div>
+          <div class="sp-metric-card accent">
+            <div class="sp-metric-num">${p.successRate}</div>
+            <div class="sp-metric-label">Success Rate</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sp-section">
+        <div class="sp-label">Deal Outcomes</div>
+        <div class="sp-grid">
+          <div><div class="sp-stat-label">Completed</div><div class="sp-stat-val">${p.completedFormal}</div></div>
+          <div><div class="sp-stat-label">Failed</div><div class="sp-stat-val">${p.failedBids}</div></div>
+          <div><div class="sp-stat-label">Inconclusive</div><div class="sp-stat-val">${p.inconclusive}</div></div>
+          <div><div class="sp-stat-label">Hostile</div><div class="sp-stat-val">${p.hostile}</div></div>
+          <div><div class="sp-stat-label">Increased Offers</div><div class="sp-stat-val">${p.increasedOffers}</div></div>
+          <div><div class="sp-stat-label">Avg Market Cap</div><div class="sp-stat-val">${p.avgMktCap}</div></div>
+        </div>
+      </div>
+
+      <div class="sp-section">
+        <div class="sp-label">Offer Types</div>
+        <div class="sp-offer-types">
+          <div class="sp-offer-type"><span class="sp-offer-dot cash"></span>Cash only <strong>${p.cashOnly}</strong></div>
+          <div class="sp-offer-type"><span class="sp-offer-dot share"></span>Share only <strong>${p.shareOnly}</strong></div>
+          <div class="sp-offer-type"><span class="sp-offer-dot mixed"></span>Mixed <strong>${p.mixed}</strong></div>
+        </div>
+      </div>
+
+      <div class="sp-section">
+        <div class="sp-label">Net Buyer / Seller</div>
+        <div class="sp-buyer-bar-wrap">
+          <div class="sp-buyer-bar">
+            <div class="sp-buyer-fill" style="width:${buyerPct}%"></div>
+          </div>
+          <div class="sp-buyer-labels">
+            <span class="sp-buyer-label buyer">Buyer ${p.netBuyer}</span>
+            <span class="sp-buyer-label seller">Seller ${p.netSeller}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sp-section">
+        <div class="sp-label">Sector &amp; Geography</div>
+        <div class="sp-grid">
+          <div><div class="sp-stat-label">Sectors</div><div class="sp-stat-val" style="font-size:12px">${p.sectors}</div></div>
+          <div><div class="sp-stat-label">Geographies</div><div class="sp-stat-val" style="font-size:12px">${p.geos}</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Timing tab -->
+    <div class="sp-tab-content" id="tab-timing">
+      <div class="sp-section">
+        <div class="sp-label">Entry &amp; Exit Timing</div>
+        <div class="sp-timeline">
+          <div class="sp-tl-item">
+            <div class="sp-tl-dot start"></div>
+            <div class="sp-tl-body">
+              <div class="sp-tl-title">Avg Days to First Filing</div>
+              <div class="sp-tl-val">${p.avgFirstDay} days</div>
+              <div class="sp-tl-sub">from start of offer period</div>
+            </div>
+          </div>
+          <div class="sp-tl-line"></div>
+          <div class="sp-tl-item">
+            <div class="sp-tl-dot end"></div>
+            <div class="sp-tl-body">
+              <div class="sp-tl-title">Avg Days to End of Offer</div>
+              <div class="sp-tl-val">${p.avgEndDay} days</div>
+              <div class="sp-tl-sub">from first filing to offer close</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sp-section">
+        <div class="sp-label">Position Building</div>
+        <div class="sp-grid">
+          <div><div class="sp-stat-label">Avg Start Holding</div><div class="sp-stat-val">${p.avgStartHolding}</div></div>
+          <div><div class="sp-stat-label">Avg End Holding</div><div class="sp-stat-val">${p.avgEndHolding}</div></div>
+          <div><div class="sp-stat-label">Avg Change (Pre-formal)</div><div class="sp-stat-val">${p.avgChangePreFormal}</div></div>
+          <div><div class="sp-stat-label">Avg Change (Formal)</div><div class="sp-stat-val">${p.avgChangeFormal}</div></div>
+        </div>
+      </div>
+
+      <div class="sp-section">
+        <div class="sp-label">Entry Patterns</div>
+        <div class="sp-grid">
+          <div><div class="sp-stat-label">Existing Shareholder</div><div class="sp-stat-val">${p.existingShareholder}</div></div>
+          <div><div class="sp-stat-label">Pre-Formal Entry</div><div class="sp-stat-val">${p.tradingBeforeOffer}</div></div>
+          <div><div class="sp-stat-label">Post-Formal Entry</div><div class="sp-stat-val">${p.tradingAfterFormal}</div></div>
+          <div><div class="sp-stat-label">Held at End</div><div class="sp-stat-val">${p.heldAtEnd}</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Instruments tab -->
+    <div class="sp-tab-content" id="tab-instruments">
+      <div class="sp-section">
+        <div class="sp-label">Pre-Formal Offer Period</div>
+        <div class="sp-inst-row">
+          <div class="sp-inst-card">
+            <div class="sp-inst-icon shares"></div>
+            <div class="sp-inst-pct">${p.sharesPreFormal}</div>
+            <div class="sp-inst-label">Shares</div>
+          </div>
+          <div class="sp-inst-card">
+            <div class="sp-inst-icon derivs"></div>
+            <div class="sp-inst-pct">${p.derivativesPreFormal}</div>
+            <div class="sp-inst-label">Derivatives</div>
+          </div>
+        </div>
+        <div class="sp-stat-note">Deals where traded: ${p.dealsPreFormal} of ${p.offers}</div>
+      </div>
+
+      <div class="sp-section">
+        <div class="sp-label">Formal Offer Period</div>
+        <div class="sp-inst-row">
+          <div class="sp-inst-card">
+            <div class="sp-inst-icon shares"></div>
+            <div class="sp-inst-pct">${p.sharesFormal}</div>
+            <div class="sp-inst-label">Shares</div>
+          </div>
+          <div class="sp-inst-card">
+            <div class="sp-inst-icon derivs"></div>
+            <div class="sp-inst-pct">${p.derivativesFormal}</div>
+            <div class="sp-inst-label">Derivatives</div>
+          </div>
+        </div>
+        <div class="sp-stat-note">Deals where traded: ${p.dealsFormal} of ${p.offers}</div>
+      </div>
+
+      <div class="sp-section">
+        <div class="sp-label">Overall</div>
+        <div class="sp-inst-row">
+          <div class="sp-inst-card">
+            <div class="sp-inst-icon shares"></div>
+            <div class="sp-inst-pct">${p.sharesOverall}</div>
+            <div class="sp-inst-label">Shares</div>
+          </div>
+          <div class="sp-inst-card">
+            <div class="sp-inst-icon derivs"></div>
+            <div class="sp-inst-pct">${p.derivativesOverall}</div>
+            <div class="sp-inst-label">Derivatives</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function switchTab(btn, tabId) {
+  btn.closest('.slide-panel').querySelectorAll('.sp-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  btn.closest('.slide-panel').querySelectorAll('.sp-tab-content').forEach(t => t.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+}
+
 function openPanel(name) {
   const sp = document.getElementById('slidePanel');
   const bd = document.getElementById('backdrop');
   document.getElementById('spName').textContent = name;
   const h = holders.find(x => x.name === name);
+  const pred = predictions.find(p => p.name === name);
+  const isHF = (h && h.type === 'Hedge Fund') || pred;
   document.getElementById('spType').textContent = h ? h.type : 'Predicted Entrant';
   let html = '';
-  if (name.includes('Sand Grove')) {
-    html = `
-      <div class="sp-section"><div class="sp-label">Trading Profile</div>
-        <div class="sp-grid">
-          <div><div class="sp-stat-label">Offers Tracked</div><div class="sp-stat-val">${sgProfile.offers}</div></div>
-          <div><div class="sp-stat-label">Formal Offers</div><div class="sp-stat-val">${sgProfile.formal}</div></div>
-          <div><div class="sp-stat-label">Success Rate</div><div class="sp-stat-val">${sgProfile.successRate}</div></div>
-          <div><div class="sp-stat-label">Avg Market Cap</div><div class="sp-stat-val">${sgProfile.avgMktCap}</div></div>
-          <div><div class="sp-stat-label">Hostile Deals</div><div class="sp-stat-val">${sgProfile.hostile}</div></div>
-          <div><div class="sp-stat-label">Uses Derivatives</div><div class="sp-stat-val">${sgProfile.derivatives}</div></div>
-          <div><div class="sp-stat-label">Net Buyer Rate</div><div class="sp-stat-val">${sgProfile.netBuyer}</div></div>
-          <div><div class="sp-stat-label">Avg End Holding</div><div class="sp-stat-val">${sgProfile.avgEndHolding}</div></div>
-          <div><div class="sp-stat-label">Avg Days to Entry</div><div class="sp-stat-val">${sgProfile.avgFirstDay}</div></div>
-          <div><div class="sp-stat-label">Avg Days to Exit</div><div class="sp-stat-val">${sgProfile.avgEndDay}</div></div>
-        </div>
-      </div>
-      <div class="sp-section"><div class="sp-label">Sector & Geography</div>
-        <div class="sp-grid">
-          <div><div class="sp-stat-label">Sectors</div><div class="sp-stat-val" style="font-size:12px">${sgProfile.sectors}</div></div>
-          <div><div class="sp-stat-label">Geographies</div><div class="sp-stat-val" style="font-size:12px">${sgProfile.geos}</div></div>
-        </div>
-      </div>`;
-  } else if (h) {
-    html = `
+
+  // Current position (for registered holders)
+  if (h) {
+    html += `
       <div class="sp-section"><div class="sp-label">Position in Schroders</div>
         <div class="sp-grid">
           <div><div class="sp-stat-label">Long</div><div class="sp-stat-val">${h.long.toFixed(3)}%</div></div>
@@ -108,17 +274,27 @@ function openPanel(name) {
     if (h.cross.length) {
       html += `<div class="sp-section"><div class="sp-label">Also Active In</div><div>${h.cross.map(c=>`<span class="cross-tag" style="font-size:11px;padding:3px 10px;margin:2px;">${c}</span>`).join('')}</div></div>`;
     }
-  } else {
-    const pred = predictions.find(p => p.name === name);
-    if (pred) {
-      html = `
-        <div class="sp-section"><div class="sp-label">Prediction</div>
-          <div style="font-size:28px;font-weight:800;color:${pred.prob>=70?'var(--green)':'var(--amber)'}">${pred.prob}% likely</div>
-          <div style="font-size:12px;color:var(--mid);margin-top:6px">${pred.reason}</div>
-          <div style="margin-top:8px">${pred.tags.map(t=>`<span class="pred-tag">${t}</span>`).join('')}</div>
-        </div>`;
-    }
   }
+
+  // Prediction banner (for predicted entrants)
+  if (!h && pred) {
+    html += `
+      <div class="sp-section sp-pred-banner">
+        <div class="sp-pred-prob ${pred.prob>=70?'high':'med'}">${pred.prob}%</div>
+        <div class="sp-pred-text">
+          <div style="font-weight:700;font-size:13px">Predicted to enter</div>
+          <div style="font-size:11px;color:var(--mid);margin-top:3px">${pred.reason}</div>
+        </div>
+      </div>
+      <div class="sp-section"><div style="display:flex;gap:4px;flex-wrap:wrap">${pred.tags.map(t=>`<span class="pred-tag">${t}</span>`).join('')}</div></div>`;
+  }
+
+  // Full behavioural analysis for hedge funds and predicted entrants
+  if (isHF) {
+    html += `<div class="sp-divider"><span>Behavioural Analysis</span></div>`;
+    html += buildBehaviourPanel(sgProfile);
+  }
+
   document.getElementById('spContent').innerHTML = html;
   sp.classList.add('open');
   bd.classList.add('open');
