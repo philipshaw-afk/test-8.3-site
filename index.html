@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SCHRODERS PLC &mdash; 8.3 Activity | M&amp;A Monitor</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- Top navigation bar -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="topbar-brand">
+      M&amp;A Monitor <span class="sep">|</span> 8.3 Activity
+    </div>
+    <nav class="topbar-nav">
+      <a href="#">Dashboard</a>
+      <a href="#" class="active">Deals</a>
+      <a href="#">Shareholders</a>
+      <a href="#">Predictions</a>
+      <a href="#">Reports</a>
+    </nav>
+  </div>
+  <div class="topbar-right">
+    <a href="#">Data as of 14 Apr 2026</a>
+  </div>
+</div>
+
+<!-- Breadcrumb -->
+<div class="breadcrumb">
+  <a href="#">Deals</a> &rsaquo; <a href="#">UK Formal Offers</a> &rsaquo; Schroders plc
+</div>
+
+<!-- Page header -->
+<div class="page-header">
+  <div class="page-header-row">
+    <div>
+      <div class="page-title">Schroders plc <span class="offer-badge badge-formal">Formal Offer</span></div>
+      <div class="page-subtitle">Phoenix Group Holdings plc &mdash; 845p per share &middot; Cash offer &middot; Announced 14 Feb 2026</div>
+    </div>
+  </div>
+</div>
+
+<!-- Deal metrics bar -->
+<div class="deal-bar">
+  <div class="deal-bar-item">
+    <div class="deal-bar-label">Offer Price</div>
+    <div class="deal-bar-val">845p</div>
+  </div>
+  <div class="deal-bar-item">
+    <div class="deal-bar-label">Current Price</div>
+    <div class="deal-bar-val">838p</div>
+  </div>
+  <div class="deal-bar-item accent">
+    <div class="deal-bar-label">Spread</div>
+    <div class="deal-bar-val green">0.84%</div>
+  </div>
+  <div class="deal-bar-item">
+    <div class="deal-bar-label">Market Cap</div>
+    <div class="deal-bar-val">&pound;4.5bn</div>
+  </div>
+  <div class="deal-bar-item">
+    <div class="deal-bar-label">Days Live</div>
+    <div class="deal-bar-val">62</div>
+  </div>
+  <div class="deal-bar-item warn">
+    <div class="deal-bar-label">HF Ownership</div>
+    <div class="deal-bar-val">7.29% <sub>&uarr;1.8pp 30d</sub></div>
+  </div>
+  <div class="deal-bar-item">
+    <div class="deal-bar-label">Total 8.3 Holders</div>
+    <div class="deal-bar-val">18</div>
+  </div>
+</div>
+
+<!-- Main content grid -->
+<div class="main">
+  <div class="content">
+
+    <!-- Shareholder Composition -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Shareholder Composition</div>
+      </div>
+      <div class="comp-bar" id="compBar"></div>
+      <div class="comp-legend" id="compLegend"></div>
+    </div>
+
+    <!-- HF% Over Time Chart -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Hedge Fund Ownership Over Time</div>
+        <div class="section-count">62 days tracked</div>
+      </div>
+      <div class="chart-wrap" id="chartWrap">
+        <div style="position:relative;width:100%;height:200px;" id="chartContainer">
+          <canvas id="hfChart" style="position:absolute;top:0;left:0;"></canvas>
+          <canvas id="hfChartOverlay" style="position:absolute;top:0;left:0;"></canvas>
+          <div id="chartHitArea" style="position:absolute;top:0;left:0;width:100%;height:100%;cursor:crosshair;"></div>
+        </div>
+        <div class="chart-tooltip" id="chartTooltip"></div>
+      </div>
+    </div>
+
+    <!-- Register -->
+    <div class="section">
+      <div class="section-header">
+        <div><span class="section-title">8.3 Register</span> <span class="section-count">18 holders</span></div>
+        <div class="section-tabs">
+          <button class="section-tab active" onclick="filterReg('all', this)">All</button>
+          <button class="section-tab" onclick="filterReg('hf', this)">Hedge Funds</button>
+          <button class="section-tab" onclick="filterReg('inst', this)">Institutional</button>
+          <button class="section-tab" onclick="filterReg('bank', this)">Banks</button>
+          <button class="section-tab" onclick="filterReg('other', this)">Other</button>
+        </div>
+      </div>
+
+      <table class="reg-table">
+        <thead><tr>
+          <th>#</th><th>Shareholder</th><th>Type</th><th>Long %</th><th>Short %</th><th>Net Long %</th><th>Also Active In</th>
+        </tr></thead>
+        <tbody id="regBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <div class="side-card">
+      <div class="side-card-header">Biggest Movers (Last 30 Days)</div>
+      <div id="moversBody"></div>
+    </div>
+    <div class="side-card">
+      <div class="side-card-header">Predicted Activity</div>
+      <div id="predsBody"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide-out panel -->
+<div class="slide-backdrop" id="backdrop" onclick="closePanel()"></div>
+<div class="slide-panel" id="slidePanel">
+  <div class="sp-header">
+    <div>
+      <div style="font-size:18px;font-weight:800;" id="spName"></div>
+      <div style="font-size:12px;color:var(--muted);margin-top:2px;" id="spType"></div>
+    </div>
+    <button class="sp-close" onclick="closePanel()">&times;</button>
+  </div>
+  <div id="spContent"></div>
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
